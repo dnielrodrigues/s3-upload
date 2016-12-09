@@ -1,0 +1,24 @@
+{
+    "name": "infocasp/portalleg",
+    "description": "Projeto de CMS da infocasp",
+    "type": "project",
+    "require": {
+        "league/flysystem-aws-s3-v3": "^1.0",
+        "phpmailer/phpmailer": "^5.2"
+    },
+    "license": "Software Proprietário",
+    "authors": [
+        {
+            "name": "Infocasp",
+            "email": "contato@infocasp.com.br"
+        },
+        {
+            "name": "Daniel Rodrigues",
+            "email": "danielrodrigues.a113@gmail.com"
+        },
+        {
+            "name": "Junior Freitas",
+            "email": "contato@infocasp.com.br"
+        }
+    ]
+}

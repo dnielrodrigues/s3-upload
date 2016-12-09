@@ -1,0 +1,15 @@
+/nbproject/
+/nbproject/*
+/vendor
+/vendor/*
+/vendor/
+/public/theme
+/public/theme/
+/public/theme/*
+/config/settings.php
+/config/Settings.php
+config/Settings.php
+/nbproject/
+/nbproject/*
+/logs/*
+/composer.lock
