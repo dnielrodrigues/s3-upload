@@ -14,6 +14,8 @@
 <body>
 
 <div class="container">
+
+    <!-- TOP -->
     <div class="clearfix">
         <div class="pull-left">
             <h1>S3 jQuery Upload</h1>
@@ -22,18 +24,17 @@
     </div>
     <br>
 
-    <!-- <blockquote>
-        <p>dropdown</p>
-    </blockquote>
-    <br> -->
+    <form class="form-upload">
+        
+        <!-- The fileinput-button span is used to style the file input field as button -->
+        <span class="btn btn-success fileinput-button">
+            <i class="glyphicon glyphicon-plus"></i>
+            <span>Add files...</span>
+            <!-- The file input field used as target for the file upload widget -->
+            <input id="fileupload" type="file" name="files[]" multiple>
+        </span>
 
-    <!-- The fileinput-button span is used to style the file input field as button -->
-    <span class="btn btn-success fileinput-button">
-        <i class="glyphicon glyphicon-plus"></i>
-        <span>Add files...</span>
-        <!-- The file input field used as target for the file upload widget -->
-        <input id="fileupload" type="file" name="files[]" multiple>
-    </span>
+    </form>
 
     <br><br>
 
@@ -44,6 +45,7 @@
 
     <!-- The container for the uploaded files -->
     <div id="files" class="files"></div>
+
 
 </div>
 
@@ -131,6 +133,7 @@ $(function () {
     // Change this to the location of your server-side upload handler:
     var url = window.location.hostname === 'blueimp.github.io' ?
                 '//jquery-file-upload.appspot.com/' : 'server/s3-upload/',
+        s3_url = '',
         uploadButton = $('<button/>')
             .addClass('btn btn-primary')
             .prop('disabled', true)
@@ -149,11 +152,15 @@ $(function () {
                     $this.remove();
                 });
             });
+
     $('#fileupload').fileupload({
+
+        forceIframeTransport: true,    // VERY IMPORTANT.  you will get 405 Method Not Allowed if you don't add this.
+        autoUpload: true,
         url: url,
+
         dataType: 'json',
         autoUpload: false,
-        acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
         maxFileSize: 999000,
         // Enable image resizing, except for Android and Opera,
         // which actually support image resizing, but fail to
