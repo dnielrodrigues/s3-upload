@@ -11,3 +11,4 @@ config/Settings.php
 /nbproject/*
 /logs/*
 /composer.lock
+/config.php
