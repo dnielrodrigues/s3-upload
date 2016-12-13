@@ -10,48 +10,43 @@
 <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
 <link rel="stylesheet" href="css/jquery.fileupload.css">
 <!-- <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.css"> -->
-
-<!-- require to S3 -->
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-
-
 </head>
 <body>
 
 <div class="container">
 
+    <!-- topo -->
+    <div class="clearfix">
+        <div class="pull-left">
+            <h1>S3 jQuery Upload</h1>
+            <h2 class="lead">Teste com suporte a drag and drop e multiplos downloads.</h2>
+        </div>
+    </div>
 
-    <form action="http://johnsmith.s3.amazonaws.com/" method="post" enctype="multipart/form-data">
+    <br><br>
 
-        key: <br>
-        <input type="input"  name="key" value="user/user1/${filename}" />
+    <form class="form-upload" id="form-upload">
 
-        <input type="hidden" name="acl" value="public-read" />
-
-        <br><br> credential: <br>
-        <input type="text"   name="X-Amz-Credential" value="AKIAIOSFODNN7EXAMPLE/20151229/us-east-1/s3/aws4_request" />
-
-        <br><br> algoritmo: <br>
-        <input type="text"   name="X-Amz-Algorithm" value="AWS4-HMAC-SHA256" />
-
-        <br><br> data: <br>
-        <input type="text"   name="X-Amz-Date" value="20151229T000000Z" />
-
-        <br><br> policy: <br>
-        <input type="hidden" name="Policy" value='<Base64-encoded policy string>' />
-
-        <br><br> assinatura: <br>
-        <input type="hidden" name="X-Amz-Signature" value="<signature-value>" />
-
-        <br><br> arquivo: <br>
-        <input type="file"   name="file" /> <br />
-
-        <!-- The elements after this will be ignored -->
-        <input type="submit" name="submit" value="Upload to Amazon S3" />
+        <!-- arquivo -->
+        <span class="btn btn-success fileinput-button">
+            <i class="glyphicon glyphicon-plus"></i>
+            <span>Adicionar Arquivo...</span>
+            <input id="fileupload" type="file" name="files[]" multiple>
+        </span>
 
     </form>
 
-    <button id="b-upload" value="Upload to Amazon S3">Upload to Amazon S3</button>
+    <br><br>
+
+    <!-- barra de progresso -->
+    <div id="progress" class="progress">
+        <div class="progress-bar progress-bar-success"></div>
+    </div>
+
+    <!-- listagem -->
+    <div id="files" class="files"></div>
+
+    <button id="b-upload">ENVIAR</button>
 
 
 </div>
@@ -82,171 +77,8 @@
 <script src="js/jquery.fileupload-validate.js"></script>
 
 
-<!-- SAMPLE SCRIPT -->
+<!-- APP -->
 <script src="js/app.js"></script>
-
-
-
-<script>
-
-
-
-
-// $(function() {
-//   $('#file_upload').fileupload({
-//     forceIframeTransport: true,    // VERY IMPORTANT.  you will get 405 Method Not Allowed if you don't add this.
-//     autoUpload: true,
-//     add: function (event, data) {
-//       $.ajax({
-//         url: "/documents",
-//         type: 'POST',
-//         dataType: 'json',
-//         data: {doc: {title: data.files[0].name}},
-//         async: false,
-//         success: function(retdata) {
-//           // after we created our document in rails, it is going to send back JSON of they key,
-//           // policy, and signature.  We will put these into our form before it gets submitted to amazon.
-//           $('#file_upload').find('input[name=key]').val(retdata.key);
-//           $('#file_upload').find('input[name=policy]').val(retdata.policy);
-//           $('#file_upload').find('input[name=signature]').val(retdata.signature);
-//         }
-
-//       });
-
-//       data.submit();
-//     },
-//     send: function(e, data) {
-//       // show a loading spinner because now the form will be submitted to amazon, 
-//       // and the file will be directly uploaded there, via an iframe in the background. 
-//       $('#loading').show();
-//     },
-//     fail: function(e, data) {
-//       console.log('fail');
-//       console.log(data);
-//     },
-//     done: function (event, data) {
-//       // here you can perform an ajax call to get your documents to display on the screen.
-//       $('#your_documents').load("/documents?for_item=1234");
-
-//       // hide the loading spinner that we turned on earlier.
-//       $('#loading').hide();
-//     },
-//   });
-// });
-
-
-
-
-
-/*jslint unparam: true, regexp: true */
-/*global window, $ */
-
-
-$(function () {
-    'use strict';
-    // Change this to the location of your server-side upload handler:
-    var url = window.location.hostname === 'blueimp.github.io' ?
-                '//jquery-file-upload.appspot.com/' : 'server/s3-upload/',
-        s3_url = '',
-        uploadButton = $('<button/>')
-            .addClass('btn btn-primary')
-            .prop('disabled', true)
-            .text('Processing...')
-            .on('click', function () {
-                var $this = $(this),
-                    data = $this.data();
-                $this
-                    .off('click')
-                    .text('Abort')
-                    .on('click', function () {
-                        $this.remove();
-                        data.abort();
-                    });
-                data.submit().always(function () {
-                    $this.remove();
-                });
-            });
-
-    $('#fileupload').fileupload({
-
-        forceIframeTransport: true,    // VERY IMPORTANT.  you will get 405 Method Not Allowed if you don't add this.
-        autoUpload: true,
-        url: url,
-
-        dataType: 'json',
-        autoUpload: false,
-        maxFileSize: 999000,
-        // Enable image resizing, except for Android and Opera,
-        // which actually support image resizing, but fail to
-        // send Blob objects via XHR requests:
-        disableImageResize: /Android(?!.*Chrome)|Opera/
-            .test(window.navigator.userAgent),
-        previewMaxWidth: 100,
-        previewMaxHeight: 100,
-        previewCrop: true
-    }).on('fileuploadadd', function (e, data) {
-        data.context = $('<div/>').appendTo('#files');
-        $.each(data.files, function (index, file) {
-            var node = $('<p/>')
-                    .append($('<span/>').text(file.name));
-            if (!index) {
-                node
-                    .append('<br>')
-                    .append(uploadButton.clone(true).data(data));
-            }
-            node.appendTo(data.context);
-        });
-    }).on('fileuploadprocessalways', function (e, data) {
-        var index = data.index,
-            file = data.files[index],
-            node = $(data.context.children()[index]);
-        if (file.preview) {
-            node
-                .prepend('<br>')
-                .prepend(file.preview);
-        }
-        if (file.error) {
-            node
-                .append('<br>')
-                .append($('<span class="text-danger"/>').text(file.error));
-        }
-        if (index + 1 === data.files.length) {
-            data.context.find('button')
-                .text('Upload')
-                .prop('disabled', !!data.files.error);
-        }
-    }).on('fileuploadprogressall', function (e, data) {
-        var progress = parseInt(data.loaded / data.total * 100, 10);
-        $('#progress .progress-bar').css(
-            'width',
-            progress + '%'
-        );
-    }).on('fileuploaddone', function (e, data) {
-        $.each(data.result.files, function (index, file) {
-            if (file.url) {
-                var link = $('<a>')
-                    .attr('target', '_blank')
-                    .prop('href', file.url);
-                $(data.context.children()[index])
-                    .wrap(link);
-            } else if (file.error) {
-                var error = $('<span class="text-danger"/>').text(file.error);
-                $(data.context.children()[index])
-                    .append('<br>')
-                    .append(error);
-            }
-        });
-    }).on('fileuploadfail', function (e, data) {
-        $.each(data.files, function (index) {
-            var error = $('<span class="text-danger"/>').text('File upload failed.');
-            $(data.context.children()[index])
-                .append('<br>')
-                .append(error);
-        });
-    }).prop('disabled', !$.support.fileInput)
-        .parent().addClass($.support.fileInput ? undefined : 'disabled');
-});
-</script>
 
 
 </body>

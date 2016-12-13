@@ -4,6 +4,7 @@
  * bootstrap do composer
  */
 require_once __DIR__ . '/../../vendor/autoload.php';
+require_once __DIR__ . '/../../config.php';
 
 use Aws\S3\S3Client;
 
@@ -32,77 +33,52 @@ $client = new S3Client([
 
 
 /**
- * S3 list obj
- */
-if ( isset($_GET['action']) && $_GET['action'] == 'list' ) {
-
-    $command = $client->getCommand( 'listObjects' , [ 'Bucket' => $bucket ]);
-    $request = $client->createPresignedRequest($command, '+20 minutes');
-    $url = $request->getUri();
-    print '<a href="' . $url . '">' . $url . '</a>';
-
-
-/**
- * S3 get
- */
-} elseif ( isset($_GET['action']) && $_GET['action'] == 'get' ) {
-    print "get - ???";
-
-// ...
-} elseif (false) {
-    # code...
-
-
-/**
  * S3 upload
  */
-} else{
 
-    // $client = new \Aws\S3\S3Client([
-    //     'version' => 'latest',
-    //     'region' => $region,
-    // ]);
-    // $bucket = $bucket;
+// $client = new \Aws\S3\S3Client([
+//     'version' => 'latest',
+//     'region' => $region,
+// ]);
+// $bucket = $bucket;
 
-    // Set some defaults for form input fields
-    $formInputs = ['acl' => 'public-read'];
+// Set some defaults for form input fields
+$formInputs = ['acl' => 'public-read'];
 
-    // Construct an array of conditions for policy
-    $options = [
-        ['acl' => 'public-read'],
-        ['bucket' => $bucket],
-        ['starts-with', '$key', 'teste/'],
-    ];
+// Construct an array of conditions for policy
+$options = [
+    ['acl' => 'public-read'],
+    ['bucket' => $bucket],
+    ['starts-with', '$key', 'teste/'],
+];
 
-    // Optional: configure expiration time string
-    $expires = '+20 minutes';
+// Optional: configure expiration time string
+$expires = '+20 minutes';
 
-    $postObject = new \Aws\S3\PostObjectV4(
-        $client,
-        $bucket,
-        $formInputs,
-        $options,
-        $expires
-    );
+$postObject = new \Aws\S3\PostObjectV4(
+    $client,
+    $bucket,
+    $formInputs,
+    $options,
+    $expires
+);
 
-    // Get attributes to set on an HTML form, e.g., action, method, enctype
-    $formAttributes = $postObject->getFormAttributes();
+// Get attributes to set on an HTML form, e.g., action, method, enctype
+$formAttributes = $postObject->getFormAttributes();
 
-    // Form input fields
-    $formInputs = $postObject->getFormInputs();
+// Form input fields
+$formInputs = $postObject->getFormInputs();
 
-    // imprime obsevacoes para a configuracao do FORM
-    // print json_encode( $formAttributes , JSON_UNESCAPED_UNICODE );
+// imprime obsevacoes para a configuracao do FORM
+// print json_encode( $formAttributes , JSON_UNESCAPED_UNICODE );
 
-    // imprime json de requisitos do FORM
-    // print json_encode( $formInputs , JSON_UNESCAPED_UNICODE );
+// imprime json de requisitos do FORM
+// print json_encode( $formInputs , JSON_UNESCAPED_UNICODE );
 
 
-    // testes
-    var_dump($formAttributes);
-    var_dump($formInputs);
-
-}
+// testes
+var_dump($formAttributes);
+var_dump($formInputs);
 
 
 ?><html>
