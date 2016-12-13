@@ -10,7 +10,10 @@ use Aws\S3\S3Client;
 /**
  * Amazon S3 params
  */
-// ... 
+$key = S3_KEY;
+$secret = S3_SECRET;
+$region = S3_REGION;
+$bucket = S3_BUCKET;
 
 
 /**

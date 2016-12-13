@@ -11,10 +11,10 @@ use Aws\S3\S3Client;
 /**
  * Amazon S3 params
  */
-$key = 'AKIAJ6YEPVBWJXYDYJPA';
-$secret = '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';
-$region = 'us-east-1';
-$bucket = 'info-homolog';
+$key = S3_KEY;
+$secret = S3_SECRET;
+$region = S3_REGION;
+$bucket = S3_BUCKET;
 
 
 /**
