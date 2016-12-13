@@ -10,48 +10,41 @@
 <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
 <link rel="stylesheet" href="css/jquery.fileupload.css">
 <!-- <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.css"> -->
-
-<!-- require to S3 -->
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-
-
 </head>
 <body>
 
 <div class="container">
 
+    <!-- TOP -->
+    <div class="clearfix">
+        <div class="pull-left">
+            <h1>S3 jQuery Upload</h1>
+            <h2 class="lead">Teste com suporte a drag and drop e multiplos downloads.</h2>
+        </div>
+    </div>
+    <br>
 
-    <form action="http://johnsmith.s3.amazonaws.com/" method="post" enctype="multipart/form-data">
-
-        key: <br>
-        <input type="input"  name="key" value="user/user1/${filename}" />
-
-        <input type="hidden" name="acl" value="public-read" />
-
-        <br><br> credential: <br>
-        <input type="text"   name="X-Amz-Credential" value="AKIAIOSFODNN7EXAMPLE/20151229/us-east-1/s3/aws4_request" />
-
-        <br><br> algoritmo: <br>
-        <input type="text"   name="X-Amz-Algorithm" value="AWS4-HMAC-SHA256" />
-
-        <br><br> data: <br>
-        <input type="text"   name="X-Amz-Date" value="20151229T000000Z" />
-
-        <br><br> policy: <br>
-        <input type="hidden" name="Policy" value='<Base64-encoded policy string>' />
-
-        <br><br> assinatura: <br>
-        <input type="hidden" name="X-Amz-Signature" value="<signature-value>" />
-
-        <br><br> arquivo: <br>
-        <input type="file"   name="file" /> <br />
-
-        <!-- The elements after this will be ignored -->
-        <input type="submit" name="submit" value="Upload to Amazon S3" />
+    <form class="form-upload">
+        
+        <!-- The fileinput-button span is used to style the file input field as button -->
+        <span class="btn btn-success fileinput-button">
+            <i class="glyphicon glyphicon-plus"></i>
+            <span>Add files...</span>
+            <!-- The file input field used as target for the file upload widget -->
+            <input id="fileupload" type="file" name="files[]" multiple>
+        </span>
 
     </form>
 
-    <button id="b-upload" value="Upload to Amazon S3">Upload to Amazon S3</button>
+    <br><br>
+
+    <!-- The global progress bar -->
+    <div id="progress" class="progress">
+        <div class="progress-bar progress-bar-success"></div>
+    </div>
+
+    <!-- The container for the uploaded files -->
+    <div id="files" class="files"></div>
 
 
 </div>
@@ -80,13 +73,6 @@
 <script src="js/jquery.fileupload-video.js"></script>
 <!-- The File Upload validation plugin -->
 <script src="js/jquery.fileupload-validate.js"></script>
-
-
-<!-- SAMPLE SCRIPT -->
-<script src="js/app.js"></script>
-
-
-
 <script>
 
 
